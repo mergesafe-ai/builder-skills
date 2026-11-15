@@ -8,6 +8,14 @@ description: Saves a short handoff file so a long agent session can end and a fr
 Every message in a long chat re-reads the whole chat. A handoff moves what
 matters into one short file, so the next session starts small.
 
+## When to write one
+
+- A task is finished and the next one is unrelated.
+- The chat is getting long. Write the handoff before the tool auto-compacts the chat: a compacted summary is lossy, and a handoff you wrote on purpose keeps what matters.
+- Auto-compact already fired. Treat that as a missed handoff: write one now, then start fresh instead of working on in the compacted chat.
+
+Leave auto-compact on. It is the safety net for the times you forget.
+
 ## Write the handoff
 
 1. Make a file in `handoffs/` at the project root, named `YYYY-MM-DD-<short-topic>.md`.
