@@ -7,6 +7,12 @@ your code actually hits the broken part.
 
 ## What you get
 
+**End a long session cleanly** (`handoff`)
+
+- Saves what got done, what's open and the next step in one short file.
+- A fresh session picks it up without re-reading the whole old chat, which is where most agent token spend goes.
+
+
 **Check your dependencies** (`cve-reachability`)
 
 - Lists every library your app pins, and flags the ones with a known security hole.
