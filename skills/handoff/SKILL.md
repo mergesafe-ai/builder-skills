@@ -42,14 +42,18 @@ Leave auto-compact on. It is the safety net for the times you forget.
 ```
 
 4. Leave out secrets, tokens and full logs. Link to them instead.
-5. Check the facts you write down. Run `git status` and confirm any PR or branch names you list.
+5. Check the facts you write down. Run `git status` and confirm any PR or branch names you list. If there are no PRs or branches, name the commits instead.
+6. Under Constraints, include every decision the owner made in the chat that is not written anywhere in the repo. The next session cannot see the chat.
+7. Under Next steps, list every remaining step in order, not only the first.
+8. Commit the handoff file with the work, so it travels with the branch.
 
 ## Continue from a handoff
 
 1. Start a fresh session. Clear the old chat first.
-2. Point the new session at the file: "Continue from handoffs/<file>."
+2. Point the new session at the file: "Continue from handoffs/<file>." If there are several and none was named, use the one with the newest date.
 3. Before acting, check the handoff against the repo: `git status`, `git log -5`, and the open PRs or issues it names. If something no longer matches, say so and ask before changing it.
-4. Start with the first item under Next steps.
+4. Work through Next steps in order.
+5. When every next step is done, delete the handoff file in the same commit as the work. Git history keeps it, and a leftover file would be picked up again.
 
 ## When not to write one
 
