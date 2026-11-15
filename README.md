@@ -24,8 +24,8 @@ your code actually hits the broken part.
 You need Python 3.11+ and internet access. No account, no API key, no installs.
 
 ```bash
-git clone https://github.com/mergesafe-ai/security-skills-for-builders
-python3 security-skills-for-builders/skills/cve-reachability/scripts/osv_lookup.py /path/to/your/app
+git clone https://github.com/mergesafe-ai/builder-skills
+python3 builder-skills/skills/cve-reachability/scripts/osv_lookup.py /path/to/your/app
 ```
 
 Or give the `cve-reachability` folder to Claude Code, and ask it to check your app for known security holes.
