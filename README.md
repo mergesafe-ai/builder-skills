@@ -1,22 +1,35 @@
-# Security skills for builders
+# Security checks for builders
 
-Free security checks you can run on your own repo with Claude Code or any
-agent that reads `SKILL.md` files.
+You shipped with libraries you didn't write. Some of them probably have a
+known security hole that someone already published, with a fix that's
+already out. This repo has free checks that find those, and tell you whether
+your code actually hits the broken part.
 
-## Skills
+## What you get
 
-- **cve-reachability**: finds known security holes in the libraries your app
-  uses, then checks whether your code actually calls the broken part.
+**Check your dependencies** (`cve-reachability`)
 
-## Run it
+- Lists every library your app pins, and flags the ones with a known security hole.
+- For each one: what the hole lets someone do, the version that fixes it, and how long it has been public.
+- Looks through your code and says whether you use the broken part. If it can't tell, it says that too.
+
+## Run it on your app
+
+You need Python 3.11+ and internet access. No account, no API key, no installs.
 
 ```bash
-python3 skills/cve-reachability/scripts/osv_lookup.py /path/to/your/repo
+git clone https://github.com/mergesafe-ai/security-skills-for-builders
+python3 security-skills-for-builders/skills/cve-reachability/scripts/osv_lookup.py /path/to/your/app
 ```
 
-Needs Python 3.11+ and internet access (queries https://api.osv.dev). No API key, no dependencies.
+Or give the `cve-reachability` folder to Claude Code, and ask it to check your app for known security holes.
 
-## Limits
+## What it reads, and what it doesn't
 
-- Python (`uv.lock`) and npm (`package-lock.json`) only for now.
-- A missing match in the code is not proof a library is safe.
+- Reads Python (`uv.lock`) and npm (`package-lock.json`) projects. Other languages are not covered yet.
+- Asks osv.dev (a free, public vulnerability database) about each exact version you have. Your code is not uploaded anywhere.
+- A clean result doesn't mean your app is secure. It means no known hole matched the libraries you pinned.
+
+## License
+
+MIT. Use it, fork it, and send fixes.
