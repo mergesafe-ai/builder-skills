@@ -1,9 +1,7 @@
-# Security checks for builders
+# Builder skills
 
-You shipped with libraries you didn't write. Some of them probably have a
-known security hole that someone already published, with a fix that's
-already out. This repo has free checks that find those, and tell you whether
-your code actually hits the broken part.
+Free skills for people building with AI coding agents. Each one is small,
+does one job, and comes with a way to check it on your own work.
 
 ## What you get
 
@@ -12,7 +10,6 @@ your code actually hits the broken part.
 - Saves what got done, what's open and the next step in one short file.
 - A fresh session picks it up without re-reading the whole old chat, which is where most agent token spend goes.
 - Comes with a script that reads your local Claude Code logs and estimates what handoffs would save you. Nothing leaves your machine.
-
 
 **Check your dependencies** (`cve-reachability`)
 
