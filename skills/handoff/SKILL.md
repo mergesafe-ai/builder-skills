@@ -55,7 +55,7 @@ Leave auto-compact on. It is the safety net for the times you forget.
 ```
 
 4. Leave out secrets, tokens and full logs. Link to them instead.
-5. Do not repeat what is already written down in specs, issues, commits or docs. Point to them by path or URL.
+5. Do not repeat what is already written down in specs, issues, commits or docs. Point to them by path or URL. Use paths relative to the project root, never absolute ones: the next session may run in a different directory.
 6. Check the facts you write down. Run `git status` and confirm any PR or branch names you list. If there are no PRs or branches, name the commits instead.
 7. Under Constraints, include every decision the user made in the chat that is not written anywhere in the repo. The next session cannot see the chat.
 8. Under Next steps, list every remaining step in order, not only the first.
@@ -68,7 +68,7 @@ If work is still mid-step, finish the step first, then write the handoff.
 
 1. Read the handoff file. If there are several and none was named, use the one with the newest date.
 2. Say in one line which handoff you loaded and what you will continue with.
-3. Before acting, check the handoff against the repo: `git status`, `git log -5`, and the open PRs or issues it names. If something no longer matches, say so and ask before changing it.
+3. Before acting, check the handoff against the repo: `git status`, `git log -5`, and the open PRs or issues it names. If anything no longer matches, say what differs, then stop and ask before doing any next step, even if the mismatch looks harmless.
 4. Work through Next steps in order.
 5. When every next step is done, delete the handoff file in the same commit as the work. Git history keeps it, and a leftover file would be picked up again.
 
