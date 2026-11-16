@@ -11,6 +11,7 @@ your code actually hits the broken part.
 
 - Saves what got done, what's open and the next step in one short file.
 - A fresh session picks it up without re-reading the whole old chat, which is where most agent token spend goes.
+- Measure it on your own sessions first: `python3 skills/handoff/scripts/measure.py` reads your local Claude Code logs and estimates what handoffs would save you. Nothing leaves your machine.
 
 
 **Check your dependencies** (`cve-reachability`)
