@@ -11,7 +11,7 @@ your code actually hits the broken part.
 
 - Saves what got done, what's open and the next step in one short file.
 - A fresh session picks it up without re-reading the whole old chat, which is where most agent token spend goes.
-- Measure it on your own sessions first: `python3 skills/handoff/scripts/measure.py` reads your local Claude Code logs and estimates what handoffs would save you. Nothing leaves your machine.
+- Comes with a script that reads your local Claude Code logs and estimates what handoffs would save you. Nothing leaves your machine.
 
 
 **Check your dependencies** (`cve-reachability`)
@@ -20,7 +20,41 @@ your code actually hits the broken part.
 - For each one: what the hole lets someone do, the version that fixes it, and how long it has been public.
 - Looks through your code and says whether you use the broken part. If it can't tell, it says that too.
 
-## Run it on your app
+## Install the handoff skill (Claude Code)
+
+```bash
+git clone https://github.com/mergesafe-ai/builder-skills
+mkdir -p ~/.claude/skills
+cp -r builder-skills/skills/handoff ~/.claude/skills/handoff
+```
+
+Start a new Claude Code session, and the `/handoff` command is there. The whole flow is three steps:
+
+1. In a long session, type `/handoff`. Claude writes a short handoff file in `handoffs/` in your project.
+2. Type `/clear`.
+3. Type `/handoff` again. The fresh session reads the file, checks it against your repo, and continues.
+
+**Optional reminder.** To have Claude tell you when a session has grown large enough to hand off, add this hook to `~/.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      { "hooks": [ { "type": "command", "command": "python3 ~/.claude/skills/handoff/hooks/handoff_hint.py" } ] }
+    ]
+  }
+}
+```
+
+It shows a one-line note once the session passes 150,000 tokens of context. It never blocks a message.
+
+**Measure first.** See what handoffs would save on your own sessions:
+
+```bash
+python3 ~/.claude/skills/handoff/scripts/measure.py
+```
+
+## Check your dependencies on your app
 
 You need Python 3.11+ and internet access. No account, no API key, no installs.
 

@@ -1,12 +1,25 @@
 ---
 name: handoff
-description: Saves a short handoff file so a long agent session can end and a fresh one can pick up the work with a small context. Use when a task is finished or the chat has grown long, or when asked to write a handoff or continue from one.
+description: Ends a long agent session cleanly and continues it in a fresh one. Run /handoff in a long session to save a short handoff file, type /clear, then run /handoff again to pick the work up with a small context. Use when a task is finished, the chat has grown long, or the user asks to write or continue from a handoff.
+argument-hint: "[write | continue]"
 ---
 
 # Handoff: end a long session, continue in a fresh one
 
 Every message in a long chat re-reads the whole chat. A handoff moves what
 matters into one short file, so the next session starts small.
+
+## The whole flow, for the user
+
+1. In the long session, type `/handoff`. The agent writes the handoff file.
+2. Type `/clear`.
+3. Type `/handoff` again. The fresh session reads the file and continues.
+
+## Which mode to run
+
+- `/handoff write` always writes. `/handoff continue` always continues.
+- Bare `/handoff`: if this session has already done work, **write**. If the session is fresh and nothing has been done yet, **continue** from the newest file in `handoffs/`.
+- If it is fresh and `handoffs/` is empty or missing, say so and ask what to work on.
 
 ## When to write one
 
@@ -42,15 +55,19 @@ Leave auto-compact on. It is the safety net for the times you forget.
 ```
 
 4. Leave out secrets, tokens and full logs. Link to them instead.
-5. Check the facts you write down. Run `git status` and confirm any PR or branch names you list. If there are no PRs or branches, name the commits instead.
-6. Under Constraints, include every decision the owner made in the chat that is not written anywhere in the repo. The next session cannot see the chat.
-7. Under Next steps, list every remaining step in order, not only the first.
-8. Commit the handoff file with the work, so it travels with the branch.
+5. Do not repeat what is already written down in specs, issues, commits or docs. Point to them by path or URL.
+6. Check the facts you write down. Run `git status` and confirm any PR or branch names you list. If there are no PRs or branches, name the commits instead.
+7. Under Constraints, include every decision the user made in the chat that is not written anywhere in the repo. The next session cannot see the chat.
+8. Under Next steps, list every remaining step in order, not only the first.
+9. Commit the handoff file with the work, so it travels with the branch.
+10. End your reply with exactly: `Handoff saved to handoffs/<file>. Type /clear, then /handoff to continue.`
+
+If work is still mid-step, finish the step first, then write the handoff.
 
 ## Continue from a handoff
 
-1. Start a fresh session. Clear the old chat first.
-2. Point the new session at the file: "Continue from handoffs/<file>." If there are several and none was named, use the one with the newest date.
+1. Read the handoff file. If there are several and none was named, use the one with the newest date.
+2. Say in one line which handoff you loaded and what you will continue with.
 3. Before acting, check the handoff against the repo: `git status`, `git log -5`, and the open PRs or issues it names. If something no longer matches, say so and ask before changing it.
 4. Work through Next steps in order.
 5. When every next step is done, delete the handoff file in the same commit as the work. Git history keeps it, and a leftover file would be picked up again.
@@ -58,4 +75,4 @@ Leave auto-compact on. It is the safety net for the times you forget.
 ## When not to write one
 
 - A quick question with a short answer.
-- A task that is still mid-step. Finish the step first, then write the handoff.
+- A session that is still small and on the same task.
