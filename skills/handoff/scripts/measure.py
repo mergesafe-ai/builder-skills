@@ -124,7 +124,8 @@ def replay(sessions, at: int, restart: int):
                 # If the real session shrank (it was compacted), the replay cannot be larger.
                 sim_ctx = sim_ctx + grew if grew >= 0 else min(sim_ctx, ctx)
             prev = ctx
-            if sim_ctx >= at:
+            # A session whose restart context is already past the threshold cannot hand off usefully.
+            if sim_ctx >= at and base < at:
                 resets += 1
                 sim_ctx = base
                 b_usd, _ = price(model, base)
