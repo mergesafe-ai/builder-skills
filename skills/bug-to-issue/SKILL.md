@@ -15,26 +15,31 @@ session, checks that issue before building anything.
 
 ## Which mode to run
 
-- `/bug-to-issue investigate`, or the user describes a bug: run **Investigate**.
+- `/bug-to-issue` or `/bug-to-issue investigate` with a bug description, or the user just describes a bug: run **Investigate**.
 - `/bug-to-issue pick-up <issue number or link>`: run **Pick up**.
 - If it is unclear, ask which one in one line.
 
+Write for someone who may not code: plain words, and explain any technical
+word in one line the first time you use it.
+
 ## Investigate (agent 1)
 
-Do not change any code in this mode.
+Do not change the project's files in this mode. Throwaway scripts to
+reproduce or probe the bug are fine; delete them when you are done.
 
 1. **Restate the bug** in one or two plain sentences: what the user saw, where, and what they expected instead. If they gave steps to trigger it, keep them word for word.
 2. **Reproduce it.** Make the bug happen again on purpose: run the steps, the test, or the request that shows it. Write down exactly what you ran and what came back.
    - If you cannot reproduce it, say so, say what you tried, and ask the user for the missing detail. Do not guess a cause.
 3. **Inspect the code and the logs.** Logs are the program's own record of what it did. Find where it goes wrong and cite `file:line`. Separate what you saw from what you suspect.
-4. **Report back, then ask.** Before proposing anything final:
-   - What causes it, with the evidence.
-   - The fix you would suggest, in plain words.
-   - What the fix will change for users.
-   - What could break, and anything else that has the same problem.
-   - The questions that only the user can answer (how they want it to behave, what matters more).
-   Ask those questions and wait. Explain any technical word in one line.
-5. **Write the issue only after the user agrees.** Use `gh issue create` if it is available, otherwise give the user the text to paste. Use this shape:
+   - If part of the cause is outside what you can see (another service, the user's browser, a caller not in this repo), say which part is confirmed and which part is still unknown.
+4. **Report back, then ask.** Keep it short, in this order:
+   - **Cause:** what goes wrong, with the evidence.
+   - **Suggested fix:** in plain words.
+   - **What changes for users.**
+   - **What could break**, and anything else with the same problem. Flag data the bug may already have affected (past orders, saved records), but do not go and change it.
+   - **Questions only you can answer:** how it should behave, what matters more. Number them.
+   Then stop and wait for the answers.
+5. **Write the issue only after the user agrees.** Show them the draft first and ask "OK to file this?" Then use `gh issue create` if it is available; otherwise save it as `issues/<short-topic>.md` in the project and tell the user where it is. "Done when" must include at least one check that **fails today and will pass once fixed**, usually a new test that reproduces the bug. Checks that already pass and only guard against breaking something else are fine, but mark them "(guard)". Use this shape:
 
 ```markdown
 ## What happens
@@ -60,19 +65,22 @@ Risks, and other places with the same problem.
 - What the fix must not touch.
 ```
 
-6. **Stop.** Give the user the issue link and say: start a fresh session and run `/bug-to-issue pick-up <number>`. Do not start the fix yourself.
+6. **Stop.** Give the user the issue link (or the file path) and say: start a fresh session and run `/bug-to-issue pick-up <number, link or file path>`. Do not start the fix yourself.
 
 ## Pick up (agent 2)
 
 You did not write this issue. Treat it as a claim to check, not an order.
 
 1. Read the issue, and its comments, in full.
-2. **Validate it before building:**
-   - Reproduce the bug yourself with the issue's steps.
+2. **Validate it before building.** Throwaway scripts are fine here too.
+   - Reproduce the bug yourself with the issue's steps. If the steps don't give the claimed result, look in the logs for what really triggers it.
    - Check that the cause it names is really where it goes wrong.
-   - Check that the agreed fix would make "Done when" true, and stays inside "Not in scope".
-3. If anything does not hold up, stop. Comment on the issue with what you found, and tell the user. Do not build on a wrong issue.
-4. If it holds up, say so in one line, then build the fix in its own branch and pull request, link the issue, and run the "Done when" check before you call it done.
+   - Write the "Done when" tests first and run them. At least one must **fail** before the fix; checks marked "(guard)" may pass. If none fails, the issue cannot prove anything.
+   - Check that the agreed fix would make "Done when" pass, and stays inside "Not in scope".
+3. If anything does not hold up, stop. Comment on the issue with what you found (with `gh issue comment`, or give the user the text), and tell the user in plain words. Say that the fix they approved rests on that finding, and suggest running `/bug-to-issue` again to re-investigate. Do not build on a wrong issue.
+   - Small slips (a line number that moved, a typo in a step) don't stop the work: note them in your comment and carry on.
+4. If it holds up, comment on the issue that it checked out, then build the fix in its own branch and pull request that names the issue, and run the "Done when" checks before you call it done.
+5. **Report back** in this order: what you checked and what you found, what you changed, the "Done when" results before and after, and what you left alone because it was out of scope.
 
 ## Rules
 
