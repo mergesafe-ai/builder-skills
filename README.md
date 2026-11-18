@@ -69,6 +69,8 @@ cp -r builder-skills/skills/bug-to-issue ~/.claude/skills/bug-to-issue
 2. Type `/clear` (or open a new session).
 3. Type `/bug-to-issue pick-up <issue number>`. The new agent checks the issue, then builds the fix.
 
+**Using Cursor, Codex or another agent?** The skill is one plain-text file. Copy `skills/bug-to-issue/SKILL.md` into your project and tell your agent: "When I report a bug, follow SKILL.md in investigate mode. When I give you an issue to fix, follow it in pick-up mode."
+
 ## Check your dependencies on your app
 
 You need Python 3.11+ and internet access. No account, no API key, no installs.
