@@ -11,6 +11,12 @@ does one job, and comes with a way to check it on your own work.
 - A fresh session picks it up without re-reading the whole old chat, which is where most agent token spend goes.
 - Comes with a script that reads your local Claude Code logs and estimates what handoffs would save you. Nothing leaves your machine.
 
+**Turn a bug into a checked issue** (`bug-to-issue`)
+
+- Instead of "fix it": the agent reproduces the bug, inspects the code and the logs, and tells you what a fix would change and what could break.
+- Once you agree, it writes a GitHub issue and stops.
+- A second agent, in a fresh session, picks the issue up and checks it before building anything.
+
 **Check your dependencies** (`cve-reachability`)
 
 - Lists every library your app pins, and flags the ones with a known security hole.
@@ -50,6 +56,18 @@ It shows a one-line note once the session passes 150,000 tokens of context. It n
 ```bash
 python3 ~/.claude/skills/handoff/scripts/measure.py
 ```
+
+## Install the bug-to-issue skill (Claude Code)
+
+```bash
+git clone https://github.com/mergesafe-ai/builder-skills
+mkdir -p ~/.claude/skills
+cp -r builder-skills/skills/bug-to-issue ~/.claude/skills/bug-to-issue
+```
+
+1. Found a bug? Type `/bug-to-issue` and describe what you saw. The agent investigates, asks you how you want it fixed, then writes the issue.
+2. Type `/clear` (or open a new session).
+3. Type `/bug-to-issue pick-up <issue number>`. The new agent checks the issue, then builds the fix.
 
 ## Check your dependencies on your app
 
