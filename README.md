@@ -21,7 +21,7 @@ does one job, and comes with a way to check it on your own work.
 
 - Every bug, feature, experiment and big goal becomes a GitHub issue, labelled `bug`, `feature`, `research` or `epic`, before an agent touches code.
 - Research issues record the question, the budget, every run and what it cost, what worked, what didn't, and when it is worth retrying.
-- Before an experiment, the agent checks the titles of past `research` issues, open and closed, so it won't pay for one that already failed. It filters by label and opens only what matches, because searching costs tokens too.
+- One pinned `Research index` issue lists every experiment with its verdict and when to retry. Before an experiment, the agent reads that one issue, not all of them, so it won't pay for one that already failed. Searching costs tokens too.
 
 **Check your dependencies** (`cve-reachability`)
 
