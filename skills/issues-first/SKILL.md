@@ -52,7 +52,7 @@ Create it the first time you file a research issue. On GitHub, pin it (`gh issue
 
 Searching costs tokens too, so read the smallest thing that answers the question.
 
-- **Before an experiment**: read the research index only (`gh issue list --search "Research index in:title" --limit 1`, then `gh issue view <n>`). Open at most 3 linked issues whose question matches, and in each read only "What didn't work", "Verdict" and "Retry when".
+- **Before an experiment**: read the research index only (`gh issue list --search "Research index in:title" --limit 1`, then `gh issue view <n>`). Open at most 3 linked issues whose question matches, and in each read only "What didn't work", "Verdict" and "Retry when". If no row matches, say so and continue.
 - **Before a bug or feature**: search open issues with that label by title, to avoid a duplicate: `gh issue list --label <label> --search "<2-3 words> in:title" --limit 10 --json number,title`.
 - Skip the check for a small fix the user has already described in full.
 
@@ -178,7 +178,7 @@ and an unlogged run is a run someone will pay for again.
 ## Close
 
 - `bug` and `feature`: only after the "Done when" checks pass. Comment with the results and the pull request.
-- `research`: only after "Verdict" and "Retry when" are filled in, and after its row in the research index shows them. A dropped idea gets closed with its reasons, never deleted, because the closed issue is what stops the next person from repeating it.
+- `research`: only after "Verdict" and "Retry when" are filled in. Update its row in the research index first (state, verdict, retry when), then close the issue. A dropped idea gets closed with its reasons, never deleted, because the closed issue is what stops the next person from repeating it.
 - `epic`: only when every part is closed.
 
 ## Rules
