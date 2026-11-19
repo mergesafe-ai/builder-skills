@@ -17,6 +17,12 @@ does one job, and comes with a way to check it on your own work.
 - Once you agree, it writes a GitHub issue and stops.
 - A second agent, in a fresh session, picks the issue up and checks it before building anything.
 
+**Put every piece of work in a labelled issue** (`issues-first`)
+
+- Every bug, feature, experiment and big goal becomes a GitHub issue, labelled `bug`, `feature`, `research` or `epic`, before an agent touches code.
+- Research issues record the question, the budget, every run and what it cost, what worked, what didn't, and when it is worth retrying.
+- Before starting anything, the agent searches open and closed issues, so it won't pay for an experiment that already failed.
+
 **Check your dependencies** (`cve-reachability`)
 
 - Lists every library your app pins, and flags the ones with a known security hole.
@@ -70,6 +76,23 @@ cp -r builder-skills/skills/bug-to-issue ~/.claude/skills/bug-to-issue
 3. Type `/bug-to-issue pick-up <issue number>`. The new agent checks the issue, then builds the fix.
 
 **Using Cursor, Codex or another agent?** The skill is one plain-text file. Copy `skills/bug-to-issue/SKILL.md` into your project and tell your agent: "When I report a bug, follow SKILL.md in investigate mode. When I give you an issue to fix, follow it in pick-up mode."
+
+## Install the issues-first skill (Claude Code)
+
+```bash
+git clone https://github.com/mergesafe-ai/builder-skills
+mkdir -p ~/.claude/skills
+cp -r builder-skills/skills/issues-first ~/.claude/skills/issues-first
+```
+
+1. Start a new Claude Code session so the skill loads. Describe a bug, a feature, something you want to try, or a big goal, and type `/issues-first`. The agent searches what exists, asks you questions, shows the draft and files the issue once you say OK.
+2. Type `/clear` (or open a new session).
+3. Type `/issues-first pick-up <issue number>`. The new agent checks the issue, then does the work. For an experiment it logs every run and its cost as it goes.
+4. `/issues-first close <issue number>` closes it once the checks pass, or once an experiment has a verdict.
+
+No GitHub? The skill keeps the issues as files in an `issues/` folder instead.
+
+**Using Cursor, Codex or another agent?** Copy `skills/issues-first/SKILL.md` into your project and tell your agent: "Before any work, follow SKILL.md."
 
 ## Check your dependencies on your app
 
