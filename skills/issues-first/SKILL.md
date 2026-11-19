@@ -28,6 +28,18 @@ First time in a project on GitHub, make sure the four labels exist (`gh label cr
 | `research` | An experiment: trying, measuring or comparing something to learn whether it is worth doing. |
 | `epic` | A big goal split into several issues. |
 
+Also keep one **research index**: a single open issue titled `Research index`
+(in the folder: `issues/0-research-index.md`) that is never closed. It holds one
+row per research issue, so nobody has to search them all:
+
+```markdown
+| # | Question | State | Verdict | Retry when |
+|---|---|---|---|---|
+| #12 | Does caching the notes list make the page faster? | closed | drop: no gain under 1,000 notes | over 10,000 notes |
+```
+
+Create it the first time you file a research issue. On GitHub, pin it (`gh issue pin <n>`).
+
 ## Which mode to run
 
 - `/issues-first` or `new`, or the user describes work: run **New**.
@@ -36,12 +48,15 @@ First time in a project on GitHub, make sure the four labels exist (`gh label cr
 - `close <issue>`: run **Close**.
 - If it is unclear, ask in one line.
 
-## Always first: search what exists
+## Always first: check what exists (cheaply)
 
-Before writing anything, search the issues, open **and closed**, for the
-same topic (`gh issue list --state all --search "<words>"`, or grep the
-`issues/` folder). Read every `research` issue on it, especially its
-"What didn't work" section.
+Searching costs tokens too, so read the smallest thing that answers the question.
+
+- **Before an experiment**: read the research index only (`gh issue list --search "Research index in:title" --limit 1`, then `gh issue view <n>`). Open at most 3 linked issues whose question matches, and in each read only "What didn't work", "Verdict" and "Retry when". If no row matches, say so and continue.
+- **Before a bug or feature**: search open issues with that label by title, to avoid a duplicate: `gh issue list --label <label> --search "<2-3 words> in:title" --limit 10 --json number,title`.
+- Skip the check for a small fix the user has already described in full.
+
+Then:
 
 - If an issue already covers it, say so with its number and use that one.
 - If a research issue already tried it, tell the user what was found and what it cost, and whether its "Retry when" condition has changed. If the user says it hasn't, stop and file nothing.
@@ -54,7 +69,8 @@ Do not change the project's files in this mode, except the `issues/` folder.
 2. **Read the project** for what this touches, and cite `file:line`.
 3. **Ask, don't assume.** Numbered questions, at most five per round, most important first, each with your best guess so the user can just say "yes". Ask only what the project can't tell you. Repeat until nothing important is open.
 4. **Show the draft and ask "OK to file this?"** File it only after a yes. No open questions go into an issue.
-5. **Stop.** Give the number and say: start a fresh session and run `/issues-first pick-up <number>`. Do not start the work in this session.
+5. For `research`, add its row to the research index (state `open`).
+6. **Stop.** Give the number and say: start a fresh session and run `/issues-first pick-up <number>`. Do not start the work in this session.
 
 ### Bug
 
@@ -162,13 +178,13 @@ and an unlogged run is a run someone will pay for again.
 ## Close
 
 - `bug` and `feature`: only after the "Done when" checks pass. Comment with the results and the pull request.
-- `research`: only after "Verdict" and "Retry when" are filled in. A dropped idea gets closed with its reasons, never deleted, because the closed issue is what stops the next person from repeating it.
+- `research`: only after "Verdict" and "Retry when" are filled in. Update its row in the research index first (state, verdict, retry when), then close the issue. A dropped idea gets closed with its reasons, never deleted, because the closed issue is what stops the next person from repeating it.
 - `epic`: only when every part is closed.
 
 ## Rules
 
 - No work without an issue, and no issue without a label.
-- Search open and closed issues before writing a new one.
+- Check before writing a new issue: the research index for experiments, a label-and-title search for the rest. Never read every issue.
 - Never do the work in the same session that wrote the issue.
 - Never say "done" without running the "Done when" checks.
 - Never run an experiment without a question, a budget and a "success looks like".
