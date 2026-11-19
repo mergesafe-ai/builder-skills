@@ -17,9 +17,9 @@ word in one line the first time you use it.
 ## Where issues live
 
 - If `gh` works in this project (`gh repo view` succeeds), use GitHub issues.
-- Otherwise use an `issues/` folder: one file per issue, `issues/<number>-<short-topic>.md`, numbered in order, with the labels on the first line as `labels: research` and the state as `state: open` on the second.
+- Otherwise use an `issues/` folder: one file per issue, `issues/<number>-<short-topic>.md`, where the number is the highest existing one plus 1. Line 1 holds the labels (`labels: research`), line 2 the state (`state: open`). The file number is the issue number, so `#3` means `issues/3-...`. To close it, change line 2 to `state: closed`.
 
-First time in a project, make sure the four labels exist (on GitHub: `gh label create <name> --force`):
+First time in a project on GitHub, make sure the four labels exist (`gh label create <name> --force`). In the `issues/` folder there is nothing to create: the label is just written on line 1.
 
 | Label | For |
 |---|---|
@@ -44,7 +44,7 @@ same topic (`gh issue list --state all --search "<words>"`, or grep the
 "What didn't work" section.
 
 - If an issue already covers it, say so with its number and use that one.
-- If a research issue already tried it, tell the user what was found and what it cost, and whether its "Retry when" condition has changed. Do not start a repeat unless the user says the condition changed.
+- If a research issue already tried it, tell the user what was found and what it cost, and whether its "Retry when" condition has changed. If the user says it hasn't, stop and file nothing.
 
 ## New
 

@@ -85,7 +85,7 @@ mkdir -p ~/.claude/skills
 cp -r builder-skills/skills/issues-first ~/.claude/skills/issues-first
 ```
 
-1. Describe a bug, a feature, something you want to try, or a big goal, and type `/issues-first`. The agent searches what exists, asks you questions, shows the draft and files the issue once you say OK.
+1. Start a new Claude Code session so the skill loads. Describe a bug, a feature, something you want to try, or a big goal, and type `/issues-first`. The agent searches what exists, asks you questions, shows the draft and files the issue once you say OK.
 2. Type `/clear` (or open a new session).
 3. Type `/issues-first pick-up <issue number>`. The new agent checks the issue, then does the work. For an experiment it logs every run and its cost as it goes.
 4. `/issues-first close <issue number>` closes it once the checks pass, or once an experiment has a verdict.
