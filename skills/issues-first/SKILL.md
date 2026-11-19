@@ -36,12 +36,17 @@ First time in a project on GitHub, make sure the four labels exist (`gh label cr
 - `close <issue>`: run **Close**.
 - If it is unclear, ask in one line.
 
-## Always first: search what exists
+## Always first: search what exists (cheaply)
 
-Before writing anything, search the issues, open **and closed**, for the
-same topic (`gh issue list --state all --search "<words>"`, or grep the
-`issues/` folder). Read every `research` issue on it, especially its
-"What didn't work" section.
+Searching costs tokens too, so keep it narrow: filter by label, read titles
+first, and open only what matches.
+
+- **Before an experiment** (`research`): search only `research` issues, open and closed, by title: `gh issue list --label research --state all --search "<2-3 words> in:title" --limit 10 --json number,title,state`. In the `issues/` folder: `grep -l "labels:.*research" issues/*.md`, then match the file names.
+- **Before a bug or feature**: search only open issues with that label, the same way, to avoid a duplicate.
+- Open at most 3 matches. For a research issue, read only "What didn't work", "Verdict" and "Retry when", not the whole thread.
+- Skip the search for a small fix the user has already described in full.
+
+Then:
 
 - If an issue already covers it, say so with its number and use that one.
 - If a research issue already tried it, tell the user what was found and what it cost, and whether its "Retry when" condition has changed. If the user says it hasn't, stop and file nothing.
@@ -168,7 +173,7 @@ and an unlogged run is a run someone will pay for again.
 ## Rules
 
 - No work without an issue, and no issue without a label.
-- Search open and closed issues before writing a new one.
+- Search before writing a new issue: by label and title, and never by reading every issue.
 - Never do the work in the same session that wrote the issue.
 - Never say "done" without running the "Done when" checks.
 - Never run an experiment without a question, a budget and a "success looks like".
