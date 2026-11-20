@@ -4,7 +4,8 @@
 Runs on UserPromptSubmit. It reads the real context size from the session
 transcript and shows a one-line note, asking the agent to offer a handoff when
 the task is done:
-- once the context passes FIRST tokens, then every STEP more;
+- once the context passes FIRST tokens (HANDOFF_HINT_FIRST, default 300000),
+  then every STEP more;
 - on a message sent IDLE_MIN or more minutes after the last reply, when the
   context is at least IDLE_FLOOR tokens. The prompt cache has likely expired
   by then, so this message re-writes the whole context: the cheapest moment
@@ -19,7 +20,15 @@ import sys
 import time
 from datetime import datetime
 
-FIRST, STEP = 150_000, 100_000
+
+def _first() -> int:
+    try:
+        return int(os.environ.get("HANDOFF_HINT_FIRST", "300000"))
+    except ValueError:
+        return 300_000
+
+
+FIRST, STEP = _first(), 100_000
 IDLE_MIN, IDLE_FLOOR = 60, 80_000
 
 
