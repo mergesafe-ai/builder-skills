@@ -1,6 +1,6 @@
 ---
 name: issues-first
-description: Every piece of work starts as a labelled GitHub issue before an agent touches code - a bug, a feature, a research experiment, or an epic that groups several. Research issues record what was tried, what it cost, what worked and what didn't, so no one pays for the same experiment twice. Use when the user reports a bug, asks for a feature, wants to try or measure something, plans something big, or asks to pick up, log to or close an issue.
+description: Files work as a labelled GitHub issue before code changes, and keeps a research log so nobody pays twice for an experiment that already failed. Load it before the first run of any experiment: when the user says try, test, see if, measure, compare, benchmark or pick the better of something, and also when you decide on your own to time, compare or benchmark options (caching, models, prompts, build or config changes) to find out what works, faster or cheaper. Also use for a new feature, a big multi-part goal, or to pick up, log to or close an issue. Bug reports go to bug-to-issue.
 argument-hint: "[new | pick-up <issue> | log <issue> | close <issue>]"
 ---
 
@@ -46,6 +46,7 @@ Create it the first time you file a research issue. On GitHub, pin it (`gh issue
 - `pick-up <issue>`: run **Pick up**.
 - `log <issue>`: run **Log a research run**.
 - `close <issue>`: run **Close**.
+- A bug report, when the `bug-to-issue` skill is installed: hand it to that skill. The Bug section below is for projects without it.
 - If it is unclear, ask in one line.
 
 ## Always first: check what exists (cheaply)
@@ -65,7 +66,7 @@ Then:
 
 Do not change the project's files in this mode, except the `issues/` folder.
 
-1. **Pick the label** and say which in one line. Something broken -> `bug`. Something new -> `feature`. "I want to try / see if / measure / compare" -> `research`. Work that needs more than about a day, or several separate parts -> `epic`.
+1. **Pick the label** and say which in one line. Something broken -> `bug`. Something new -> `feature`. "I want to try / see if / measure / compare", or making something faster or cheaper where the result has to be measured -> `research`. Work that needs more than about a day, or several separate parts -> `epic`.
 2. **Read the project** for what this touches, and cite `file:line`.
 3. **Ask, don't assume.** Numbered questions, at most five per round, most important first, each with your best guess so the user can just say "yes". Ask only what the project can't tell you. Repeat until nothing important is open.
 4. **Show the draft and ask "OK to file this?"** File it only after a yes. No open questions go into an issue.

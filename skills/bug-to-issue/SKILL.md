@@ -1,6 +1,6 @@
 ---
 name: bug-to-issue
-description: Turns "I found a bug" into a checked GitHub issue before anyone fixes anything. One agent reproduces the bug, inspects the code and logs, explains what a fix would change and what could break, and writes the issue once the user agrees. A different agent then picks the issue up and validates it before building. Use when the user reports a bug, says something is broken, or asks to pick up a bug issue.
+description: Turns "I found a bug" into a checked GitHub issue before anyone fixes anything. One agent reproduces the bug, inspects the code and logs, explains what a fix would change and what could break, and writes the issue once the user agrees. A different agent then picks the issue up and validates it before building. Use when the user reports a bug, an error or a crash, says something is broken or not working, or asks to pick up a bug issue. This skill owns bug reports; issues-first covers features and experiments.
 argument-hint: "[investigate | pick-up <issue>]"
 ---
 

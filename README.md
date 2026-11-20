@@ -111,6 +111,10 @@ Or give the `cve-reachability` folder to Claude Code, and ask it to check your a
 - Asks osv.dev (a free, public vulnerability database) about each exact version you have. Your code is not uploaded anywhere.
 - A clean result doesn't mean your app is secure. It means no known hole matched the libraries you pinned.
 
+## Contributing
+
+Every new or changed skill is measured before it merges: which prompts load it, which don't, and a run end to end. See [AGENTS.md](AGENTS.md).
+
 ## License
 
 MIT. Use it, fork it, and send fixes.
