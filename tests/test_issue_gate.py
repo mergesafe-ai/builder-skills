@@ -106,6 +106,30 @@ def test_git_dash_c_is_judged_by_that_directory(env, repo, tmp_path):
     assert bash(env, f"git -C {repo} commit -m x", blocked_here).returncode == 0
 
 
+@pytest.mark.parametrize("command", [
+    "cd {wt} && git commit -m x",
+    "cd {wt}; git commit -m x",
+    "W={wt}; git -C $W commit -m x",
+    "W={wt} && git -C ${{W}} push",
+    "cd {wt} && git add -A && git commit -m x",
+])
+def test_gate_follows_cd_and_variables(env, repo, tmp_path, command):
+    wt = tmp_path / "wt"
+    subprocess.run(["git", "-C", str(repo), "worktree", "add", "-q", str(wt), "-b", "issue-15-x"], check=True)
+    assert bash(env, command.format(wt=wt), repo).returncode == 0
+
+
+@pytest.mark.parametrize("command", [
+    "git -C $UNSET commit -m x",
+    "cd $UNSET && git commit -m x",
+    "cd {other} && cd {repo} && git commit -m x",
+])
+def test_unresolved_or_returning_paths_are_judged_where_they_land(env, repo, tmp_path, command):
+    other = tmp_path / "other"
+    other.mkdir()
+    assert bash(env, command.format(other=other, repo=repo), repo).returncode == 2
+
+
 # --- allowed ---------------------------------------------------------------
 
 def test_file_outside_any_repo_is_allowed(env, tmp_path):

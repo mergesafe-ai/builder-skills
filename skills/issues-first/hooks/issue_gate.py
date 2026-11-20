@@ -137,28 +137,57 @@ def judge(data, directory, path, tool):
     sys.exit(2)
 
 
+VAR = re.compile(r"\$(\w+)|\$\{(\w+)\}")
+ASSIGN = re.compile(r"^[A-Za-z_]\w*=")
+SEPARATORS = {"&&", ";", "||", "|", "&", "(", ")"}
+
+
+def resolve(path, variables, base):
+    """`path` with ~ and assigned $VARs expanded, joined to base; None if a $ is left."""
+    path = VAR.sub(lambda m: variables.get(m.group(1) or m.group(2), m.group(0)), path)
+    if "$" in path:
+        return None
+    return os.path.join(base, os.path.expanduser(path))
+
+
 def git_targets(command, cwd):
-    """Directories of every `git ... commit|push` in a shell command."""
+    """Directories of every `git ... commit|push` in a shell command.
+
+    Follows `cd <dir>` and `NAME=value` earlier in the line; no full shell parsing.
+    """
     try:
-        words = shlex.split(command, posix=True)
+        lex = shlex.shlex(command, posix=True, punctuation_chars=True)
+        lex.whitespace_split = True
+        words = list(lex)
     except ValueError:
         words = command.split()
-    targets, i = [], 0
+    targets, variables, here, i, start = [], {}, cwd, 0, True
     while i < len(words):
-        if os.path.basename(words[i]) != "git":
+        word = words[i]
+        if word in SEPARATORS:
+            start, i = True, i + 1
+        elif start and ASSIGN.match(word):
+            name, _, value = word.partition("=")
+            variables[name] = VAR.sub(lambda m: variables.get(m.group(1) or m.group(2), m.group(0)), value)
             i += 1
-            continue
-        directory, j = cwd, i + 1
-        while j < len(words) and words[j].startswith("-"):
-            if words[j] in ("-C", "-c") and j + 1 < len(words):
-                if words[j] == "-C":
-                    directory = os.path.join(directory, words[j + 1])
-                j += 2
-            else:
-                j += 1
-        if j < len(words) and words[j] in ("commit", "push"):
-            targets.append(directory)
-        i = j
+        elif start and word == "cd" and i + 1 < len(words) and words[i + 1] not in SEPARATORS:
+            here = resolve(words[i + 1], variables, here) or here
+            i += 2
+        elif os.path.basename(word) != "git":
+            start, i = False, i + 1
+        else:
+            start = False
+            directory, j = here, i + 1
+            while j < len(words) and words[j].startswith("-"):
+                if words[j] in ("-C", "-c") and j + 1 < len(words):
+                    if words[j] == "-C":
+                        directory = resolve(words[j + 1], variables, directory) or directory
+                    j += 2
+                else:
+                    j += 1
+            if j < len(words) and words[j] in ("commit", "push"):
+                targets.append(directory)
+            i = j
     return targets
 
 
