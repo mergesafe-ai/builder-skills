@@ -13,7 +13,8 @@ SCRIPT = Path(__file__).resolve().parents[1] / "skills" / "handoff" / "scripts" 
 
 
 @pytest.fixture
-def proj(tmp_path):
+def proj(tmp_path, monkeypatch):
+    monkeypatch.delenv("HANDOFF_DIR", raising=False)  # the user's own setting must not leak in
     (tmp_path / "handoffs").mkdir()
     return tmp_path
 
@@ -117,7 +118,7 @@ HINT = SCRIPT.parents[1] / "hooks" / "handoff_hint.py"
     (90_000, 120, "Away"),       # big enough, cache expired
     (90_000, 5, None),           # cache still warm
     (50_000, 120, None),         # too small to matter
-    (160_000, 5, "context is"),  # size threshold alone
+    (310_000, 5, "context is"),  # size threshold alone
 ])
 def test_hint_warns_after_the_cache_expires(tmp_path, monkeypatch, size, ago_min, expect):
     monkeypatch.setenv("HOME", str(tmp_path))
@@ -130,3 +131,17 @@ def test_hint_warns_after_the_cache_expires(tmp_path, monkeypatch, size, ago_min
         assert expect in out
     else:
         assert out == ""
+
+
+def test_hint_first_threshold_is_configurable(tmp_path, monkeypatch):
+    monkeypatch.setenv("HOME", str(tmp_path))
+    tr = tmp_path / "t.jsonl"
+    tr.write_text('{"type":"assistant","timestamp":"2099-01-01T00:00:00Z","message":{"usage":{"input_tokens":200000}}}\n')
+    payload = '{"transcript_path":"%s","session_id":"s2"}' % tr
+    run_hint = lambda first: subprocess.run([sys.executable, str(HINT)], input=payload, capture_output=True,
+                                            text=True, env={**os.environ, "HANDOFF_HINT_FIRST": first}).stdout
+    assert run_hint("300000") == ""
+    assert "context is" in run_hint("150000")
+    monkeypatch.delenv("HANDOFF_HINT_FIRST", raising=False)
+    no_env = subprocess.run([sys.executable, str(HINT)], input=payload, capture_output=True, text=True).stdout
+    assert no_env == ""  # default is 300k

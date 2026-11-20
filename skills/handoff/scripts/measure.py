@@ -12,7 +12,7 @@ It reports two things:
 Usage:
     python3 measure.py                      # all projects
     python3 measure.py ~/.claude/projects/<one-project-folder>
-    python3 measure.py --at 150000 --restart 40000
+    python3 measure.py --at 300000 --restart 40000
 
 This is an estimate, not a bill. Costs use each model's list prices (PRICES below):
 cache reads are 0.1x the input price on most models but 0.05x on Opus 5.5 and
@@ -145,7 +145,7 @@ def pct(part: float, whole: float) -> str:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("root", nargs="?", default=os.path.expanduser("~/.claude/projects"))
-    ap.add_argument("--at", type=int, default=150_000, help="hand off when context passes this many tokens")
+    ap.add_argument("--at", type=int, default=300_000, help="hand off when context passes this many tokens")
     ap.add_argument("--restart", type=int, default=40_000, help="tokens a fresh session re-reads to catch up")
     args = ap.parse_args()
 
