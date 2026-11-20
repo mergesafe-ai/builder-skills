@@ -182,6 +182,15 @@ and an unlogged run is a run someone will pay for again.
 - `research`: only after "Verdict" and "Retry when" are filled in. Update its row in the research index first (state, verdict, retry when), then close the issue. A dropped idea gets closed with its reasons, never deleted, because the closed issue is what stops the next person from repeating it.
 - `epic`: only when every part is closed.
 
+## If the gate blocks an edit
+
+The user may have installed the optional gate (`hooks/issue_gate.py`). It
+blocks file edits, `git commit` and `git push` in a git repo until the work
+has an issue: a branch that names it (`issue-12-topic`), a `pick-up <n>` in
+this session, or the user typing `no-issue: <reason>`. When it blocks you,
+don't work around it. Run **New** for the work, or ask the user in one line
+whether this change needs no issue. Never type `no-issue:` for them.
+
 ## Rules
 
 - No work without an issue, and no issue without a label.
