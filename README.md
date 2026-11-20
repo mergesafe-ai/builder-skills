@@ -9,6 +9,8 @@ does one job, and comes with a way to check it on your own work.
 
 - Saves what got done, what's open and the next step in one short file.
 - A fresh session picks it up without re-reading the whole old chat, which is where most agent token spend goes.
+- Each handoff gets a short id, so `/handoff ec84ca` loads that exact one, even pasted with a stray `#` or dot, or with one character wrong.
+- Lists the subagents still running, so the next session messages them instead of starting the same work twice. When no work is left, it asks whether to close the session instead of writing an empty handoff.
 - Comes with a script that reads your local Claude Code logs and estimates what handoffs would save you. Nothing leaves your machine.
 
 **Turn a bug into a checked issue** (`bug-to-issue`)
@@ -39,9 +41,9 @@ cp -r builder-skills/skills/handoff ~/.claude/skills/handoff
 
 Start a new Claude Code session, and the `/handoff` command is there. The whole flow is three steps:
 
-1. In a long session, type `/handoff`. Claude writes a short handoff file in `handoffs/` in your project.
+1. In a long session, type `/handoff`. Claude writes a short handoff file in `handoffs/` in your project and tells you its id.
 2. Type `/clear`.
-3. Type `/handoff` again. The fresh session reads the file, checks it against your repo, and continues.
+3. Type `/handoff` again (or `/handoff <id>` for a specific one). The fresh session reads the file, checks it against your repo, and continues.
 
 **Optional reminder.** To have Claude tell you when a session has grown large enough to hand off, add this hook to `~/.claude/settings.json`:
 
