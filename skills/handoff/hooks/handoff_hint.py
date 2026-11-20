@@ -61,8 +61,8 @@ def main() -> None:
             "additionalContext": (
                 f"[handoff hint] This session's context is ~{k} tokens and is re-read on every message. "
                 "Answer the user's message as usual. Then, if the current task is done or at a natural "
-                "break, write a handoff with the handoff skill (its 'Write the handoff' steps) and end "
-                "your reply with the line the skill specifies. If work is still mid-step, say what must "
+                "break, follow the handoff skill: if no work is left, its 'When no work is left' section; "
+                "otherwise its 'Write the handoff' steps, ending your reply with the line it specifies. If work is still mid-step, say what must "
                 "finish first and write the handoff once it does."
             ),
         },
