@@ -52,9 +52,14 @@ def main():
         print("Blocks per repo:")
         for repo, n in Counter(e.get("repo") or "?" for e in by["block"]).most_common():
             print(f"  {n:4}  {repo}")
-        bound = {e.get("session") for e in by["bind"]}
-        blocked = {e.get("session") for e in by["block"]}
-        print(f"\nSessions blocked: {len(blocked)}; of these, later picked up an issue: {len(blocked & bound)}.\n")
+        # Pick-up happens in a fresh session, so match a block to a later binding by repo.
+        first_block = {}
+        for e in by["block"]:
+            first_block.setdefault(e.get("repo"), e.get("ts", ""))
+        picked = {e.get("repo") for e in by["bind"] if e.get("ts", "") > first_block.get(e.get("repo"), "~")}
+        sessions = len({e.get("session") for e in by["block"]})
+        print(f"\nSessions blocked: {sessions}. Repos where an issue was picked up after a block: "
+              f"{len(picked)} of {len(first_block)}.\n")
 
     if by["exempt"]:
         print("Exemptions (no-issue):")
