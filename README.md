@@ -23,12 +23,6 @@ does one job, and comes with a way to check it on your own work.
 - Research issues record the question, the budget, every run and what it cost, what worked, what didn't, and when it is worth retrying.
 - One pinned `Research index` issue lists every experiment with its verdict and when to retry. Before an experiment, the agent reads that one issue, not all of them, so it won't pay for one that already failed. Searching costs tokens too.
 
-**Count before you cut** (`count-before-you-cut`)
-
-- Before the agent applies a "save tokens" trick (shorter names, minified prompts, stripped comments), it counts tokens on your own files, for free.
-- If the trick doesn't save at least 5%, it doesn't apply it. On 33 real pull requests, short variable names *added* 0.4% to 2.6% tokens.
-- It writes the result into the `issues-first` research index, so nobody measures the same trick twice.
-
 **Check your dependencies** (`cve-reachability`)
 
 - Lists every library your app pins, and flags the ones with a known security hole.
@@ -99,22 +93,6 @@ cp -r builder-skills/skills/issues-first ~/.claude/skills/issues-first
 No GitHub? The skill keeps the issues as files in an `issues/` folder instead.
 
 **Using Cursor, Codex or another agent?** Copy `skills/issues-first/SKILL.md` into your project and tell your agent: "Before any work, follow SKILL.md."
-
-## Install the count-before-you-cut skill (Claude Code)
-
-```bash
-git clone https://github.com/mergesafe-ai/builder-skills
-mkdir -p ~/.claude/skills
-cp -r builder-skills/skills/count-before-you-cut ~/.claude/skills/count-before-you-cut
-```
-
-1. Start a new Claude Code session so the skill loads. It runs on its own whenever you or the agent want to change files to save tokens. You can also type `/count-before-you-cut <the trick>`.
-2. The agent checks the research index, counts tokens before and after on copies of your files, and tells you the numbers. Your project files are not changed unless the trick saves enough and you say yes.
-3. It records the verdict as a `research` issue. Install `issues-first` too for the full format.
-
-You need `uv` or `pip install tiktoken`. Nothing is sent to an AI model, so measuring costs $0.
-
-**Using Cursor, Codex or another agent?** Copy `skills/count-before-you-cut/SKILL.md` into your project and tell your agent: "Before changing anything to save tokens, follow SKILL.md."
 
 ## Check your dependencies on your app
 
