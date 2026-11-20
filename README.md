@@ -92,6 +92,34 @@ cp -r builder-skills/skills/issues-first ~/.claude/skills/issues-first
 
 No GitHub? The skill keeps the issues as files in an `issues/` folder instead.
 
+**Optional gate.** The skill asks the agent to file an issue first; an agent that skips the skill can still edit code. To make the rule hold, add this hook to `~/.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      { "matcher": "Edit|Write|MultiEdit|NotebookEdit|Bash|Skill",
+        "hooks": [ { "type": "command", "command": "python3 ~/.claude/skills/issues-first/hooks/issue_gate.py" } ] }
+    ],
+    "UserPromptSubmit": [
+      { "hooks": [ { "type": "command", "command": "python3 ~/.claude/skills/issues-first/hooks/issue_gate.py" } ] }
+    ]
+  }
+}
+```
+
+In a git repo, it then blocks file edits, `git commit` and `git push` until one of these is true:
+
+- the branch names an issue: `issue-12`, `12-topic` or `#12`;
+- this session picked an issue up (`/issues-first pick-up 12` or `/bug-to-issue pick-up 12`);
+- you typed `no-issue: <reason>` in this session, for a change that needs no issue. Only you can type it, so the agent can't exempt itself.
+
+Files outside a git repo, and in `issues/`, `.claude/` or `handoffs/`, are never blocked. If the hook itself fails, the edit goes through. Every block, pick-up and exemption is written to `~/.claude/skill-log.jsonl`; see where the gate got in your way with:
+
+```bash
+python3 builder-skills/scripts/skill_report.py --days 7
+```
+
 **Using Cursor, Codex or another agent?** Copy `skills/issues-first/SKILL.md` into your project and tell your agent: "Before any work, follow SKILL.md."
 
 ## Check your dependencies on your app
