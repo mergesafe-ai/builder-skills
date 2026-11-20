@@ -1,0 +1,15 @@
+IF1	issues-first	user	try caching the notes list to see if it's faster
+IF2	issues-first	user	measure whether the cheaper model gpt-small is good enough for the summaries
+IF3	issues-first	agent	the build is slow, make it faster
+IF4	issues-first	agent	pick the better of the two prompts in prompts/ and switch the app to it
+IF5	issues-first	agent	the summaries cost too much, bring the cost down
+BUG1	bug-to-issue	user	the login page is broken
+BUG2	bug-to-issue	user	I get a 500 error when I open /notes without signing in
+CVE1	cve-reachability	user	are our dependencies safe? any known vulnerabilities?
+CVE2	cve-reachability	user	I saw a security advisory about requests 2.25, does it affect us?
+HO1	handoff	user	this chat is getting long, write a handoff so I can continue in a fresh session
+HO2	handoff	user	pick up where the last session left off
+NEG1	none	user	fix this typo in README
+NEG2	none	user	what does main.py do?
+NEG3	none	user	add a docstring to app/notes.py
+NEG4	none	user	rename list_notes to get_notes everywhere
