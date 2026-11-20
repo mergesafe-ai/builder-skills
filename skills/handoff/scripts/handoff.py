@@ -9,24 +9,46 @@ all mean ec84ca. With no exact match, it loads a handoff saved in the last
 RECENT_H hours whose id is one character off or starts with what was typed, if
 exactly one does, and says so. If several do, it lists them and loads none.
 Exit code 0 when a handoff was printed, 1 when not. Standard library only.
+
+Handoffs go in ./handoffs/ unless HANDOFF_DIR is set, e.g.
+HANDOFF_DIR='~/.claude/handoffs/{repo}' keeps them out of the repo; {repo} is
+the main checkout's folder name, so every worktree of a repo shares one folder.
 """
 import os
 import re
 import secrets
+import subprocess
 import sys
 import time
 
-FOLDER = "handoffs"
 RECENT_H = 24
-ID = re.compile(r"^([0-9a-f]{6})-")
+ID = re.compile(r"^([0-9a-f]{6})(?:-|\.md$)")
+
+
+def repo_name():
+    """The main checkout's folder name (the same from any worktree), else the cwd's."""
+    try:
+        common = subprocess.run(["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
+                                capture_output=True, text=True, timeout=5).stdout.strip()
+    except (OSError, subprocess.SubprocessError):
+        common = ""
+    root = os.path.dirname(common) if common.endswith(os.sep + ".git") else os.getcwd()
+    return os.path.basename(root) or "project"
+
+
+def folder():
+    custom = os.environ.get("HANDOFF_DIR", "").strip()
+    if not custom:
+        return "handoffs"
+    return os.path.expanduser(custom.replace("{repo}", repo_name()))
 
 
 def handoffs():
     try:
-        names = os.listdir(FOLDER)
+        names = os.listdir(folder())
     except OSError:
         return []
-    paths = [os.path.join(FOLDER, n) for n in names if n.endswith(".md")]
+    paths = [os.path.join(folder(), n) for n in names if n.endswith(".md")]
     return sorted(paths, key=os.path.getmtime, reverse=True)
 
 
@@ -70,7 +92,7 @@ def find(typed):
     paths = handoffs()
     if not typed.strip():
         if not paths:
-            print(f"NO HANDOFF FOUND: {FOLDER}/ is empty or missing.")
+            print(f"NO HANDOFF FOUND: {folder()}/ is empty or missing.")
             return 1
         show(paths[0])
         return 0
@@ -90,7 +112,7 @@ def find(typed):
         for p in near:
             print(f"- {id_of(p)}  {p}  saved {age(p)}")
         return 1
-    print(f"NO HANDOFF FOUND for {want or typed.strip()!r} in {FOLDER}/.")
+    print(f"NO HANDOFF FOUND for {want or typed.strip()!r} in {folder()}/.")
     return 1
 
 
@@ -100,7 +122,7 @@ def new(topic):
     hid = secrets.token_hex(3)
     while hid in taken:
         hid = secrets.token_hex(3)
-    print(f"{FOLDER}/{hid}-{slug}.md")
+    print(f"{folder()}/{hid}-{slug}.md")
     return 0
 
 

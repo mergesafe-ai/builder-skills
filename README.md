@@ -57,7 +57,13 @@ Start a new Claude Code session, and the `/handoff` command is there. The whole 
 }
 ```
 
-It shows a one-line note once the session passes 150,000 tokens of context. It never blocks a message.
+It shows a one-line note once the session passes 150,000 tokens of context, and again every 100,000 more. It also shows one when you come back after an hour or more to a session of 80,000+ tokens: the prompt cache has expired by then, so your next message re-sends the whole context, which makes it the cheapest moment to start fresh. It never blocks a message.
+
+**Keep handoffs out of the repo.** By default handoffs go in `handoffs/` in your project, ready to commit. To keep them private instead, set `HANDOFF_DIR` (for example in the `env` block of `~/.claude/settings.json`). `{repo}` is replaced with the repo's folder name, and every worktree of a repo shares one folder:
+
+```json
+{ "env": { "HANDOFF_DIR": "~/.claude/handoffs/{repo}" } }
+```
 
 **Measure first.** See what handoffs would save on your own sessions:
 

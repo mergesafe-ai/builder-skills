@@ -21,8 +21,8 @@ The script `scripts/handoff.py`, in this skill's folder, names new handoffs and 
 
 - `/handoff write` always writes. `/handoff continue` always continues.
 - `/handoff <id>`: **continue** from that handoff. Anything that is not `write` or `continue` is an id, even with a stray `#`, dot or comma around it.
-- Bare `/handoff`: if this session has already done work, **write**. If the session is fresh and nothing has been done yet, **continue** from the newest file in `handoffs/`.
-- If it is fresh and `handoffs/` is empty or missing, say so and ask what to work on.
+- Bare `/handoff`: if this session has already done work, **write**. If the session is fresh and nothing has been done yet, **continue** from the newest handoff.
+- If it is fresh and there is no handoff (`handoff.py find` prints `NO HANDOFF FOUND`), say so and ask what to work on.
 
 ## When to write one
 
@@ -42,7 +42,7 @@ and acted on by the next session.
 
 ## Write the handoff
 
-1. Get the file name: `python3 <skill-dir>/scripts/handoff.py new <short-topic>`. It prints `handoffs/<id>-<short-topic>.md` with a free 6-character id. Write the handoff there.
+1. Get the file name: `python3 <skill-dir>/scripts/handoff.py new <short-topic>`. It prints the path, `handoffs/<id>-<short-topic>.md` with a free 6-character id (or under `HANDOFF_DIR` when that is set). Write the handoff at exactly that path.
 2. Keep it under about 40 lines. Facts only, no narration.
 3. Use exactly these sections:
 
@@ -76,8 +76,8 @@ and acted on by the next session.
 7. Under Constraints, include every decision the user made in the chat that is not written anywhere in the repo. The next session cannot see the chat.
 8. Under Next steps, list every remaining step in order, not only the first.
 9. Under Subagents, list every subagent or background agent still running, with the id you would message it by. They keep running after `/clear`, and the next session can message them instead of starting the same work twice. Write `None running.` if there are none.
-10. Commit the handoff file with the work, so it travels with the branch.
-11. End your reply with exactly: `Handoff <id> saved to handoffs/<file>. Type /clear, then /handoff to continue (or /handoff <id> in any session).`
+10. If the handoff path is inside the repo, commit it with the work, so it travels with the branch. If it is outside (`HANDOFF_DIR`), don't commit anything for it.
+11. End your reply with exactly: `Handoff <id> saved to <path>. Type /clear, then /handoff to continue (or /handoff <id> in any session).`
 
 If work is still mid-step, finish the step first, then write the handoff.
 
@@ -88,7 +88,7 @@ If work is still mid-step, finish the step first, then write the handoff.
 3. Before acting, check the handoff against the repo: `git status`, `git log -5`, and the open PRs or issues it names. If anything no longer matches, say what differs, then stop and ask before doing any next step, even if the mismatch looks harmless.
 4. Before starting any agent, list the agents already running and match them to the Subagents table. Message a running one about its task instead of starting a new agent for the same work.
 5. Work through Next steps in order.
-6. When every next step is done, delete the handoff file in the same commit as the work. Git history keeps it, and a leftover file would be picked up again.
+6. When every next step is done, delete the handoff file (in the same commit as the work, when it is inside the repo). Git history keeps it, and a leftover file would be picked up again.
 
 ## When not to write one
 
