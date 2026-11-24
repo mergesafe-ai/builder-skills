@@ -31,6 +31,14 @@ does one job, and comes with a way to check it on your own work.
 - For each one: what the hole lets someone do, the version that fixes it, and how long it has been public.
 - Looks through your code and says whether you use the broken part. If it can't tell, it says that too.
 
+**Pin your dependencies** (`pin-and-cooldown`)
+
+- Makes your package manager wait a few days before taking any new release, so a hijacked one (like the infected axios versions of 2026-03-31) is usually pulled before it reaches you.
+- Pins every dependency to the exact version installed today. It never upgrades anything.
+- Makes CI install from the committed lockfile, and pins GitHub Actions to a commit and Docker images to a digest.
+- A security fix is never stuck behind the wait: if a fixed version is too new, it lets that one package through and tells you when to remove the exception.
+- Shows you the list of changes and asks before making them.
+
 ## Install the handoff skill (Claude Code)
 
 ```bash
@@ -146,6 +154,26 @@ Or give the `cve-reachability` folder to Claude Code, and ask it to check your a
 - Reads Python (`uv.lock`) and npm (`package-lock.json`) projects. Other languages are not covered yet.
 - Asks osv.dev (a free, public vulnerability database) about each exact version you have. Your code is not uploaded anywhere.
 - A clean result doesn't mean your app is secure. It means no known hole matched the libraries you pinned.
+
+## Pin your dependencies
+
+You need Python 3.11+. The check reads your files and changes nothing:
+
+```bash
+git clone https://github.com/mergesafe-ai/builder-skills
+python3 builder-skills/skills/pin-and-cooldown/scripts/check_pins.py /path/to/your/app
+```
+
+To have the fixes made too, copy the skill into Claude Code and ask it to pin your dependencies:
+
+```bash
+mkdir -p ~/.claude/skills
+cp -r builder-skills/skills/pin-and-cooldown ~/.claude/skills/pin-and-cooldown
+```
+
+- Knows npm, pnpm, Yarn, bun, uv, Poetry and pip, GitHub Actions, Dockerfiles and compose files.
+- Reads the project root only, not each package of a monorepo.
+- Looking up commit SHAs and image digests needs `gh` or `git`, and `docker`. Where it can't look one up, it leaves the line and says so.
 
 ## Contributing
 
