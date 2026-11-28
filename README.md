@@ -39,6 +39,14 @@ does one job, and comes with a way to check it on your own work.
 - A security fix is never stuck behind the wait: if a fixed version is too new, it lets that one package through and tells you when to remove the exception.
 - Shows you the list of changes and asks before making them.
 
+**Keep secrets away from your coding agent** (`keep-secrets-from-agents`)
+
+- Finds `.env` files, private keys and credential files, and says whether each is in git and whether `.gitignore` covers it. It reports key names, never values.
+- Checks that Claude Code (`permissions.deny`), Cursor (`.cursorignore`) and Gemini CLI (`.geminiignore`) are told not to read them, and that Claude Code can't run `env` or `printenv`. For Codex and Copilot it tells you where the setting lives.
+- Finds agent instructions (`AGENTS.md`, `CLAUDE.md`, rules, skills) that send the agent to `.env` or tell it to print the environment. In NordLayer's November 2026 AI Scout research, a line like that led an agent to load a whole `.env` of production secrets into its session, 10 times in 3 weeks.
+- Moves the agent onto its own task-scoped token, and tells you which secrets to move out of the project and which to rotate.
+- Says plainly what it can't stop: these rules are guardrails, not a sandbox.
+
 ## Install the handoff skill (Claude Code)
 
 ```bash
@@ -174,6 +182,25 @@ cp -r builder-skills/skills/pin-and-cooldown ~/.claude/skills/pin-and-cooldown
 - Knows npm, pnpm, Yarn, bun, uv, Poetry and pip, GitHub Actions, Dockerfiles and compose files.
 - Reads the project root only, not each package of a monorepo.
 - Looking up commit SHAs and image digests needs `gh` or `git`, and `docker`. Where it can't look one up, it leaves the line and says so.
+
+## Keep secrets away from your coding agent
+
+You need Python 3.11+. The check reads your files, prints no secret values and changes nothing:
+
+```bash
+git clone https://github.com/mergesafe-ai/builder-skills
+python3 builder-skills/skills/keep-secrets-from-agents/scripts/check_secrets.py /path/to/your/app
+```
+
+To have the fixes made too, copy the skill into Claude Code and ask it to keep your agent away from your secrets:
+
+```bash
+mkdir -p ~/.claude/skills
+cp -r builder-skills/skills/keep-secrets-from-agents ~/.claude/skills/keep-secrets-from-agents
+```
+
+- Reads the project only, not your user-level settings or the Copilot settings on GitHub.
+- Deny rules and ignore files stop an agent's own file tools, not every program it can run in a shell. For a hard boundary, run the agent in a sandbox or container without production credentials.
 
 ## Contributing
 
